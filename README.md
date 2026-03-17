@@ -1,109 +1,195 @@
-# ✈️ AirportFlightManager
+# AirportFlightManager
 
-Уеб-базирана система за **следене и управление на полетите в летище**, разработена с **Django REST Framework**. Поддържа търсене на полети от пътници и справки за предстоящи полети от членове на екипажа.
+AirportFlightManager is a Django REST Framework project for managing and searching airport flight data. It was created as a backend-focused academic team project and is designed around realistic airport workflows such as flight search, crew-related views, operator permissions, and role-based access to flight information.
 
----
+The project is especially useful as a portfolio piece because it combines API development, custom permissions, data modeling, and automated testing in one structured application.
 
-## 📌 Основни функционалности
+## Project Overview
 
-### ✅ За пътници
-- Търсене на полети по дестинация, номер, интервал от часове
-- Преглед на детайли за полети
+The system provides different views of flight data depending on the type of user.
 
-### 🤝‍✈️ За членове на екипажа
-- Справка за предстоящи полети
-- Преглед на съекипници и роли
+- passengers can search for flights by destination or flight number
+- crew members can view flights assigned to them
+- operators and inspectors can manage flight data with restricted write access
+- administrators have full access to the system
 
-### 🛠️ За оператори/администратори
-- CRUD операции над полети
-- Добавяне и редакция на летища, авиокомпании, екипажи, апарати
-- Управление на роли: Admin, Inspector, CrewMember, Observer
+This makes the project a good example of a backend service that is not only about CRUD, but also about business rules and access control.
 
----
+## Main Features
 
-## ⚙️ Технологии
+- public flight listing and search
+- flight filtering by destination and flight number
+- crew-specific flight endpoint
+- role-based write permissions
+- administrative management of flights and related entities
+- support for airports, flights, crew members, roles, and operators
+- automated tests for search and permission-related behavior
+- seed commands for sample data
 
-- Python 3.11+
-- Django 5.1
+## User Roles
+
+The system is built around several roles:
+
+- `Admin` - full system access
+- `Inspector` - write access to flight-related data
+- `CrewMember` - access to assigned or relevant crew flight information
+- `Passenger` / public user - read-only flight search and view access
+
+Custom permission logic is implemented in:
+
+- `AIRPORT_MANAGER/permissions.py`
+
+## Tech Stack
+
+- Python
+- Django
 - Django REST Framework
-- SQLite (development)
-- JWT (production-ready)
-- Docker (optional)
+- SQLite
+- Django test framework
+- Behave / BDD-style feature files
 
----
+## Repository Structure
 
-## 🚀 Стартиране на проекта
+Important files and folders include:
 
-```bash
-git clone https://github.com/omer-mestan/AIRPORT_MANAGER.git
-cd AIRPORT_MANAGER
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-```
+- `manage.py` - Django entry point
+- `requirements.txt` - project dependencies
+- `AIRPORT_MANAGER/models/Models.py` - core data models
+- `AIRPORT_MANAGER/views/` - API view logic
+- `AIRPORT_MANAGER/serializers/` - serializer definitions
+- `AIRPORT_MANAGER/tests/` - automated tests
+- `AIRPORT_MANAGER/features/` - feature-based test scenarios
+- `AIRPORT_MANAGER/management/commands/` - seed commands
+- `class_diagram.png` - class diagram for the project
 
----
+## API Endpoints
 
-## 🗂️ API крайни точки
+The main API routes are defined in:
 
-| Method | URL                          | Описание                                 | Достъп |
-|--------|------------------------------|------------------------------------------|--------|
-| GET    | `/api/flights/`             | Списък от полети с филтриране            | Всички |
-| GET    | `/api/flights/?destination=London` | Търсене по дестинация            | Всички |
-| GET    | `/api/my-crew-flights/`     | Предстоящи полети за екипаж              | Само CrewMember |
-| PATCH  | `/api/flights/<id>/`        | Редакция на полет                        | Admin, Inspector |
+- `AIRPORT_MANAGER/urls.py`
 
----
+Examples of available endpoints:
 
-## 👥 Роли и Права
+- `GET /api/flights/` - list flights
+- `GET /api/flights/?destination=London` - search flights by destination
+- `GET /api/flights/?flight_number=BG123` - search flights by flight number
+- `GET /api/my-crew-flights/` - crew-specific upcoming flights
 
-- **Admin**: Пълен достъп
-- **Inspector**: CRUD над полети
-- **CrewMember**: Само своите полети
-- **Passenger**: Търсене и преглед
+Depending on the endpoint and HTTP method, access may be public, restricted to authenticated crew members, or limited to admin / inspector roles.
 
-Правата са имплементирани чрез custom permissions: `IsAdminOrInspectorForWrite`, `IsCrewUser`.
+## Data Model
 
----
+The project includes entities related to airport operations, such as:
 
-## ✅ Тестване
+- airports
+- flights
+- users
+- crew members
+- roles
+- operators
+
+These models work together to support both public flight search and role-specific operational views.
+
+## Testing
+
+The repository contains multiple automated tests that cover important backend behavior, including:
+
+- flight search by destination
+- flight search by flight number
+- invalid search scenarios
+- crew flight scenarios
+- operator-related flight views
+
+Run the tests with:
 
 ```bash
 python manage.py test
 ```
 
-- Тестови модули: `django.test`, `rest_framework.test`
-- Покрития: търсене, достъп, ограничения, полезни сценарии
+## Setup And Run
 
----
+To run the project locally:
 
-## 👨‍💼 Автори
+```bash
+git clone https://github.com/omer-mestan/AirportFlightManager.git
+cd AirportFlightManager
+python -m venv venv
+```
 
-- Юмер Местан – [omer987@outlook.com](mailto:omer987@outlook.com)
-- Христо Стоилов
-- Алекс Тенев
-- Димитър Георгиев
+Activate the environment:
 
-Проект към Ту-София – Факултет по ИТИ
+Windows:
 
----
+```bash
+venv\Scripts\activate
+```
 
-## 📄 Лиценз
+macOS / Linux:
 
-# LICENSE
+```bash
+source venv/bin/activate
+```
 
-© 2025 Юмер Местан и екипът на AIRPORT_MANAGER
+Install dependencies and start the project:
 
-Този проект е лицензиран под Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0).
+```bash
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
 
-✅ Разрешено е използването, споделянето и модифицирането на проекта **само за некомерсиални цели**, при условие че авторите са упоменати.
+If you want sample data, you can also explore the available custom management commands inside:
 
-❌ Не се разрешава използване за търговски цели без писмено разрешение.
+- `AIRPORT_MANAGER/management/commands/`
 
-📄 Пълният лиценз е достъпен на:  
-https://creativecommons.org/licenses/by-nc/4.0/legalcode
+## Documentation And Supporting Files
 
-Софтуерът е с образователска цел. Всички права запазени от авторите.
+The repository also contains additional academic and project documentation, including:
+
+- `class_diagram.png`
+- project archives
+- Word and ZIP documentation files related to the coursework
+
+These files help document both the architecture and the educational context of the project.
+
+## Why This Project Matters
+
+AirportFlightManager is a strong backend-focused example because it shows more than basic endpoint creation. It demonstrates:
+
+- relational data modeling
+- API design with Django REST Framework
+- role-based authorization
+- project organization in Django
+- automated testing
+- domain-specific business logic in a realistic scenario
+
+It also serves as a useful foundation for more advanced airport management systems, such as dashboard-based full-stack applications.
+
+## Possible Future Improvements
+
+Some directions for future development could include:
+
+- JWT authentication
+- Swagger / OpenAPI documentation
+- frontend dashboard integration
+- pagination and more advanced filtering
+- deployment configuration
+- Docker setup
+- stronger test coverage and CI integration
+
+## Authors
+
+- Yumer Mestan
+- Hristo Stoilov
+- Aleks Tenev
+- Dimitar Georgiev
+
+## License
+
+This project is published for educational purposes and is licensed under:
+
+**Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**
+
+More details:
+
+- [https://creativecommons.org/licenses/by-nc/4.0/](https://creativecommons.org/licenses/by-nc/4.0/)
