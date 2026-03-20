@@ -118,4 +118,4 @@ class Command(BaseCommand):
                 member=random.choice(crew_members)
             )
 
-        self.stdout.write(self.style.SUCCESS("✅ Seeding complete! 100 users, 100 crew, 50 flights, 100 airports, etc."))
+        self.stdout.write(self.style.SUCCESS("✅ Seeding complete! 100 users, 20 crews, 50 flights, 100 airports, etc."))
