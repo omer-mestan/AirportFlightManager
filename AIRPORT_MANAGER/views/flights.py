@@ -18,7 +18,6 @@ class FlightViewSet(viewsets.ModelViewSet):
         flight_number = params.get('flight_number')
         destination = params.get('destination')
         departure_after = params.get('departure_after')
-        print(departure_after)
         departure_before = params.get('departure_before')
 
         if flight_number:
