@@ -79,7 +79,7 @@ class OperatorFlightViewTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertGreaterEqual(len(response.data), 2)
 
-    #Преглеждане и модифициране на плети
+    #Преглеждане и модифициране на полети
     def test_operator_can_view_flight_details(self):
         response = self.client.get(f"/api/flights/{self.flight1.id}/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
