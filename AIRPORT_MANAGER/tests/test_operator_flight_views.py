@@ -26,11 +26,14 @@ class OperatorFlightViewTests(TestCase):
         self.airport_from = Airport.objects.create(name="Sofia Airport", city="Sofia", country="BG")
         self.airport_to = Airport.objects.create(name="London Heathrow", city="London", country="UK")
 
-        # Създаване на полети
+        # Създаване на полети - и двата полета са в една и съща бъдеща дата
+        future_day = (now() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        self.future_day = future_day
+
         self.flight1 = Flight.objects.create(
             flight_number="BG123",
-            departure_time=now() + timedelta(hours=5),
-            arrival_time=now() + timedelta(hours=8),
+            departure_time=future_day + timedelta(hours=5),
+            arrival_time=future_day + timedelta(hours=8),
             duration=timedelta(hours=3),
             price=250.00,
             flight_type="Passenger",
@@ -43,8 +46,8 @@ class OperatorFlightViewTests(TestCase):
 
         self.flight2 = Flight.objects.create(
             flight_number="BG200",
-            departure_time=now() + timedelta(days=1),
-            arrival_time=now() + timedelta(days=1, hours=3),
+            departure_time=future_day + timedelta(hours=10),
+            arrival_time=future_day + timedelta(hours=13),
             duration=timedelta(hours=3),
             price=180.00,
             flight_type="Passenger",
@@ -63,7 +66,7 @@ class OperatorFlightViewTests(TestCase):
         self.assertEqual(response.data[0]["flight_number"], "BG123")
 
     def test_search_by_departure_date(self):
-        departure_date = (now() + timedelta(days=1)).date().isoformat()
+        departure_date = self.future_day.date().isoformat()
         response = self.client.get(f"/api/flights/?departure_date={departure_date}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
