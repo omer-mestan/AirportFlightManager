@@ -17,14 +17,16 @@ class FlightViewSet(viewsets.ModelViewSet):
 
         flight_number = params.get('flight_number')
         destination = params.get('destination')
+        departure_date = params.get('departure_date')
         departure_after = params.get('departure_after')
-        print(departure_after)
         departure_before = params.get('departure_before')
 
         if flight_number:
             queryset = queryset.filter(flight_number__icontains=flight_number)
         if destination:
             queryset = queryset.filter(to_airport__name__icontains=destination)
+        if departure_date:
+            queryset = queryset.filter(departure_time__date=departure_date)
         if departure_after:
             t = parse_time(departure_after)
             if t:
